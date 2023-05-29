@@ -19,9 +19,25 @@
      :level :level1
      :class (styles/level1)]))
 
-(defn home-body []
+(defn car-view []
   (let [wheelbase (re-frame/subscribe [::subs/wheelbase])]
-    [re-com.text/p "The wheelbase is" @wheelbase "units long"]))
+    [:svg {:width 400 :height 100}
+     [:circle {:cx "50" :cy "50" :r "40" :stroke "black" :stroke-width "4" :fill "khaki"}]
+     [:circle {:cx (str (+ 50 @wheelbase)) :cy "50" :r "40" :stroke "black" :stroke-width "4" :fill "khaki"}]]))
+
+(defn car-customizer-view []
+  (let [wheelbase (re-frame/subscribe [::subs/wheelbase])]
+    [re-com/slider
+     :model wheelbase
+     :on-change #(re-frame/dispatch [::events/update-wheelbase %])
+     :max 300]))
+
+(defn home-body []
+  [re-com/v-box
+   :src    (at)
+   :gap    "1em"
+   :children [[car-view]
+              [car-customizer-view]]])
 
 (defn link-to-about-page []
   [re-com/hyperlink
