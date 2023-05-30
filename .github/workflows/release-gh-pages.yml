@@ -25,4 +25,4 @@ jobs:
         GITHUB_PAGES_REPO_AUTHOR: danielmartincraig
         GITHUB_PAGES_REPO_NAME: com.danielmartincraig.car-designer.github.io
         GITHUB_PAGES_RELEASE_BRANCH: master
-        PROJECT_BUILD_FOLDER: resources/public/
+        PROJECT_BUILD_FOLDER: /resources/public/
