@@ -15,29 +15,54 @@
   (let [name (re-frame/subscribe [::subs/name])]
     [re-com/title
      :src   (at)
-     :label (str "Hello from " @name ". This is the Home Page.")
+     :label (str "Car Designer")
      :level :level1
      :class (styles/level1)]))
 
-(defn car-view []
-  (let [wheelbase (re-frame/subscribe [::subs/wheelbase])]
-    [:svg {:width 400 :height 100}
-     [:circle {:cx "50" :cy "50" :r "40" :stroke "black" :stroke-width "4" :fill "khaki"}]
-     [:circle {:cx (str (+ 50 @wheelbase)) :cy "50" :r "40" :stroke "black" :stroke-width "4" :fill "khaki"}]]))
+(defn car-visualizer-view [car-id]
+  (let [car (re-frame/subscribe [::subs/car car-id])]
+    [:svg {:viewBox "-50 -50 300 150"}
+     [:rect {:x 0 :y 0 :width (:body-length @car) :height 70 :style {:fill "red" :stroke-width 3 :stroke "black"}}]
+     [:circle {:cx (:wheel-shift @car) :cy 70 :r (:wheel-radius @car) :stroke "black" :stroke-width "4" :fill "khaki"}]
+     [:circle {:cx (+ (:wheel-shift @car) (:wheelbase @car)) :cy 70 :r (:wheel-radius @car) :stroke "black" :stroke-width "4" :fill "khaki"}]]))
 
-(defn car-customizer-view []
-  (let [wheelbase (re-frame/subscribe [::subs/wheelbase])]
-    [re-com/slider
-     :model wheelbase
-     :on-change #(re-frame/dispatch [::events/update-wheelbase %])
-     :max 300]))
+(defn car-customizer-view [car-id]
+  (let [car (re-frame/subscribe [::subs/car car-id])]
+    [re-com/v-box
+     :src    (at)
+     :gap    "1em"
+     :children [[re-com/slider
+                 :model (:wheel-radius @car)
+                 :on-change #(re-frame/dispatch [::events/update-car car-id :wheel-radius %])
+                 :max (/ (:wheelbase @car) 2)]
+                [re-com/slider
+                 :model (:wheelbase @car)
+                 :on-change #(re-frame/dispatch [::events/update-car car-id :wheelbase %])
+                 :max (- (:body-length @car) (:wheel-shift @car))
+                 :min (* 2 (:wheel-radius @car))]
+                [re-com/slider
+                 :model (:body-length @car)
+                 :on-change #(re-frame/dispatch [::events/update-car car-id :body-length %])
+                 :max 200
+                 :min (+ (:wheelbase @car) (:wheel-shift @car))]
+                [re-com/slider
+                 :model (:wheel-shift @car)
+                 :on-change #(re-frame/dispatch [::events/update-car car-id :wheel-shift %])
+                 :max (- (:body-length @car) (:wheelbase @car))]]]))
 
-(defn home-body []
+(defn car-view [car-id]
   [re-com/v-box
    :src    (at)
    :gap    "1em"
-   :children [[car-view]
-              [car-customizer-view]]])
+   :children [[car-visualizer-view car-id]
+              [car-customizer-view car-id]]])
+
+(defn home-body []
+  [re-com/h-box
+   :src    (at)
+   :gap    "1em"
+   :children [[car-view 0]
+              [car-view 1]]])
 
 (defn link-to-about-page []
   [re-com/hyperlink
@@ -64,6 +89,9 @@
    :label "This is the About Page."
    :level :level1])
 
+(defn about-body []
+  [re-com/p "This is the car designer, it is a very cool way to build two rectangular red cars"])
+
 (defn link-to-home-page []
   [re-com/hyperlink
    :src      (at)
@@ -75,6 +103,7 @@
    :src      (at)
    :gap      "1em"
    :children [[about-title]
+              [about-body]
               [link-to-home-page]]])
 
 (defmethod routes/panels :about-panel [] [about-panel])
