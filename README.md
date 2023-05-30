@@ -1,7 +1,6 @@
 # com.danielmartincraig.cardesigner
 
-A [re-frame](https://github.com/day8/re-frame) application designed to ... well, that part is up to
-you.
+This is the car designer, it is a very cool way to build two rectangular red cars
 
 ## Getting Started
 
