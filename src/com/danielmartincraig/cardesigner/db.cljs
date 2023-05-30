@@ -2,6 +2,7 @@
 
 (def default-db
   {:name "re-frame"
+   :active-panel :home-panel
    :cars [{:wheelbase 70
            :wheel-radius 10
            :body-length 140
