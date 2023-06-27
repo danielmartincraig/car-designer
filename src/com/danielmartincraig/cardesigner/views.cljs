@@ -98,12 +98,37 @@
    :label    "go to Home Page"
    :on-click #(re-frame/dispatch [::events/navigate :home])])
 
+(defn interface-square [column row]
+  [:rect {:width 20
+          :height 20
+          :x column
+          :y row
+          :on-click #(js/alert (str column "," row))
+          :class (styles/interface-square)}])
+
+(defn interface []
+  (let [dimensions 10]
+    (fn []
+      [:g
+       (doall
+        (for [column (map #(* 20 %) (range (inc dimensions)))
+              row (map #(* 20 %) (range (inc dimensions)))]
+          ^{:key (str "interface-square," column "," row)} [interface-square column row]))])))
+
+(defn gear-app []
+  (let [dimensions 10]
+    (fn []
+      [:svg {:width (* (inc dimensions) 20)
+             :height (* (inc dimensions) 20)}
+       [interface]])))
+
 (defn about-panel []
   [re-com/v-box
    :src      (at)
    :gap      "1em"
    :children [[about-title]
               [about-body]
+              ;;[gear-app]
               [link-to-home-page]]])
 
 (defmethod routes/panels :about-panel [] [about-panel])

@@ -1,16 +1,17 @@
 (ns com.danielmartincraig.cardesigner.styles
   (:require-macros
-    [garden.def :refer [defcssfn]])
+   [garden.def :refer [defcssfn]])
   (:require
-    [spade.core   :refer [defglobal defclass]]
-    [garden.units :refer [deg px]]
-    [garden.color :refer [rgba]]))
+   [spade.core   :refer [defglobal defclass]]
+   [garden.units :refer [deg px]]
+   [garden.color :refer [rgba]]
+   [garden.selectors :refer [defselector]]))
 
 (defcssfn linear-gradient
- ([c1 p1 c2 p2]
-  [[c1 p1] [c2 p2]])
- ([dir c1 p1 c2 p2]
-  [dir [c1 p1] [c2 p2]]))
+  ([c1 p1 c2 p2]
+   [[c1 p1] [c2 p2]])
+  ([dir c1 p1 c2 p2]
+   [dir [c1 p1] [c2 p2]]))
 
 (defglobal defaults
   [:body
@@ -26,3 +27,10 @@
 (defclass level1
   []
   {:color :green})
+
+(defclass interface-square
+  []
+  {:stroke :black
+   :fill :none
+   :stroke-width 1
+   :pointer-events :visible})
